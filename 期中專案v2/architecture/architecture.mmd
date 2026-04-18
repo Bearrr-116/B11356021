@@ -1,0 +1,55 @@
+flowchart TD
+    subgraph Sources["資料來源（非結構／半結構）"]
+        S1[法規全文與歷史版本]
+        S2[函釋／行政規則]
+        S3[裁判書公開本]
+    end
+
+    subgraph ETL["Data Ingestion（ETL）— 向量化邊界之前"]
+        E1[Ingest: 下載／落地 raw]
+        E2[Clean: Markdown 化與噪音移除]
+        E3[Structure: 條號／章節正規化]
+        E4[Chunk: Markdown 邊界 + 法條結構 parent-child]
+        E5[Annotate: metadata（Spec-003a）]
+    end
+
+    subgraph VecBoundary["向量化邊界（Vectorization Boundary）"]
+        VB1[embedding_text 定稿]
+        VB2[Embedding Model: BGE-M3]
+    end
+
+    subgraph Storage["Vector DB 拓撲 + Keyword Index"]
+        QD[(Qdrant: legal_units_vectors)]
+        OS[(OpenSearch: legal_units_bm25)]
+        OBJ[(Object Store: 原文／大檔)]
+    end
+
+    subgraph Retrieval["檢索策略（Hybrid + Parent-Document）"]
+        N[Query Normalizer（Spec-002）]
+        H[Hybrid Recall: BM25 + Dense]
+        F[RRF Fusion]
+        P[Parent Reconstruction]
+        R[Reranker 介入點: cross-encoder]
+    end
+
+    subgraph Gen["生成（Grounded）"]
+        RULE[Rule Engine（Spec-005）]
+        GO[Generation Orchestrator（Spec-007）]
+        LLM[LLM（可關閉 Stage2）]
+    end
+
+    S1 --> E1
+    S2 --> E1
+    S3 --> E1
+    E1 --> E2 --> E3 --> E4 --> E5 --> VB1 --> VB2
+    E5 --> OBJ
+    VB2 --> QD
+    E5 --> OS
+
+    U[User Query] --> N --> H
+    H --> F --> P --> R --> RULE --> GO --> LLM --> OUT[Answer + Citations + Trace]
+
+    QD <-->|dense| H
+    OS <-->|bm25| H
+    QD <-->|payload join| P
+    OS <-->|id join| P
