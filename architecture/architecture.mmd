@@ -1,0 +1,18 @@
+flowchart TD
+    A[資料來源: 法條、子法、判決摘要、函釋] --> B[ETL 與清洗]
+    B --> B1[格式轉換: PDF/HTML/Word to Markdown]
+    B1 --> B2[條號與章節正規化]
+    B2 --> C[Chunking 層]
+    C --> C1[Parent Document: 法條章節/判決主文段]
+    C --> C2[Child Chunk: 條文片段/判決理由片段]
+    C2 --> D[Embedding Model: BGE-M3]
+    D --> E[Vector DB: Qdrant]
+    B2 --> F[Keyword Index: OpenSearch BM25]
+
+    U[使用者問題] --> Q[查詢前處理: 法條別名與術語展開]
+    Q --> H[Hybrid Retrieval: BM25 + Dense]
+    H --> P[Parent-Document Reconstruction]
+    P --> R[Reranker: bge-reranker-large]
+    R --> G[Grounded Prompt Builder]
+    G --> L[LLM 生成]
+    L --> O[輸出: 答案 + 引用法條 + 相關判決摘要 + 信心分數]
