@@ -8,6 +8,8 @@ LAWS = [
     {"name": "民法", "pcode": "B0000001", "category": "legal"},
     {"name": "消費者保護法", "pcode": "J0170001", "category": "rights"},
     {"name": "勞動基準法", "pcode": "N0030001", "category": "rights"},
+    {"name": "刑法", "pcode": "C0000001", "category": "legal"},
+    {"name": "民事訴訟法", "pcode": "B0010001", "category": "legal"},
 ]
 
 def fetch_law(pcode: str) -> str:

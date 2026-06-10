@@ -14,6 +14,8 @@ LAW_FILES = [
     {"file": "docs/民法.md", "category": "legal"},
     {"file": "docs/消費者保護法.md", "category": "rights"},
     {"file": "docs/勞動基準法.md", "category": "rights"},
+    {"file": "docs/刑法.md", "category": "legal"},
+    {"file": "docs/民事訴訟法.md", "category": "legal"},
 ]
 
 def chunk_text(text: str, chunk_size: int = 500) -> list:
