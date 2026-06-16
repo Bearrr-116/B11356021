@@ -15,7 +15,12 @@ ROUTE_PROMPT = """
 回覆只能是 JSON 格式：
 {"skill": "skill名稱", "need_rag": true或false, "rag_categories": ["類別"]}
 
-need_rag 為 true 時代表需要搜尋知識庫。
+need_rag 判斷規則：
+- 問到法律諮詢地點、地址、電話、服務時間 → need_rag: true
+- 問到特定法條內容 → need_rag: true
+- 問到法律資源、去哪裡諮詢 → need_rag: true
+- 一般法律概念問題 → need_rag: false
+
 rag_categories 從以下選擇：legal, contract, case_law, rights, general
 """
 

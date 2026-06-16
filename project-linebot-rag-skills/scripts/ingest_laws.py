@@ -16,9 +16,12 @@ LAW_FILES = [
     {"file": "docs/勞動基準法.md", "category": "rights"},
     {"file": "docs/刑法.md", "category": "legal"},
     {"file": "docs/民事訴訟法.md", "category": "legal"},
+    {"file": "docs/法律諮詢資源.md", "category": "legal"},
+    {"file": "docs/法律扶助基金會.md", "category": "legal"},
+    {"file": "docs/地方法院.md", "category": "legal"},
 ]
 
-def chunk_text(text: str, chunk_size: int = 500) -> list:
+def chunk_text(text: str, chunk_size: int = 3000) -> list:
     chunks = []
     lines = text.split("\n")
     current = ""
